@@ -1,0 +1,37 @@
+{
+  "uuid": "f28ebd10-32a8-43ee-97cf-04175a641772",
+  "shortName": "T Time",
+  "longName": "T Time",
+  "companyName": "Tony Hotchen",
+  "versionCode": 2,
+  "versionLabel": "2.0.0",
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {},
+  "resources": {
+    "media": [
+      {
+        "menuIcon": true,
+        "type": "png",
+        "name": "IMAGE_MENU_ICON",
+        "file": "images/menu_icon_t_time.png"
+      },
+      {
+        "type":"font",
+        "name":"QUIRKY_MESSY_38",
+        "file":"fonts/Quirky_Messy.ttf" 
+      },
+      {
+        "type":"font",
+        "name":"QUIRKY_MESSY_20",
+        "file":"fonts/Quirky_Messy.ttf" 
+      },
+      {
+        "type":"font",
+        "name":"QUIRKY_MESSY_16",
+        "file":"fonts/Quirky_Messy.ttf" 
+      }
+    ]
+  }
+}
