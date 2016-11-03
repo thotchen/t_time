@@ -1,0 +1,48 @@
+{
+    "author": "Tony Hotchen",
+    "dependencies": {},
+    "keywords": [],
+    "name": "t-time",
+    "pebble": {
+        "displayName": "T Time",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/menu_icon_t_time.png",
+                    "menuIcon": true,
+                    "name": "IMAGE_MENU_ICON",
+                    "type": "png"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_16",
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_20",
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_38",
+                    "type": "font"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk"
+        ],
+        "uuid": "f28ebd10-32a8-43ee-97cf-04175a641772",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "2.1.0"
+}

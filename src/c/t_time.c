@@ -17,7 +17,7 @@ static struct CommonWordsData {
   TextLayer *time;
   TextLayer *connection;
   TextLayer *battery;
-  InverterLayer *invert;
+  //InverterLayer *invert;
   Window *window;
   char buffer[BUFFER_SIZE];
 } s_data;
@@ -53,10 +53,10 @@ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
 static void handle_bluetooth(bool connected) {
   text_layer_set_text(s_data.connection, connected ? "" : "bluetooth disconnected");
   if (connected) {
-    layer_remove_from_parent(inverter_layer_get_layer(s_data.invert));
+    //layer_remove_from_parent(inverter_layer_get_layer(s_data.invert));
     vibes_enqueue_custom_pattern(CT_PATTERN);
   } else {
-    layer_add_child(window_get_root_layer(s_data.window), inverter_layer_get_layer(s_data.invert));
+    //layer_add_child(window_get_root_layer(s_data.window), inverter_layer_get_layer(s_data.invert));
     vibes_enqueue_custom_pattern(SK_PATTERN);
   }
 }
@@ -87,7 +87,7 @@ static void do_init(void) {
   text_layer_set_font(s_data.connection, small);
   text_layer_set_text_alignment(s_data.connection, GTextAlignmentCenter);
 
-  s_data.invert = inverter_layer_create(GRect(0, 0, frame.size.w, frame.size.h));
+  //s_data.invert = inverter_layer_create(GRect(0, 0, frame.size.w, frame.size.h));
 
   s_data.battery = text_layer_create(GRect(frame.size.w -50, frame.size.h -30, 50, 30));
   text_layer_set_background_color(s_data.battery, GColorClear);
@@ -114,7 +114,7 @@ static void do_deinit(void) {
   text_layer_destroy(s_data.time);
   text_layer_destroy(s_data.connection);
   text_layer_destroy(s_data.battery);
-  inverter_layer_destroy(s_data.invert);
+//  inverter_layer_destroy(s_data.invert);
 }
 
 int main(void) {
