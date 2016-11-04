@@ -14,12 +14,39 @@ const VibePattern CT_PATTERN = {
   .num_segments = 9
 };
 
+static const char* const DAYS[] = {
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+};
+
+static const char* const MONTHS[] = {
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+};
+
 static struct CommonWordsData {
   TextLayer *time;
   TextLayer *connection;
   TextLayer *battery;
   TextLayer *dateLayer;
   TextLayer *dateTextLayer;
+  TextLayer *monthTextLayer;
+  TextLayer *dayTextLayer;
   Window *window;
   char buffer[BUFFER_SIZE];
 } s_data;
@@ -51,10 +78,14 @@ static void update_time(struct tm* t) {
 }
 
 static void update_date(struct tm* t) {
-  int day = t->tm_mday;
-  static char day_text[] = "00";
-  snprintf(day_text, sizeof(day_text), "%02d", day);
-  text_layer_set_text(s_data.dateTextLayer,  day_text);
+  int date = t->tm_mday;
+  static char date_text[] = "00";
+  snprintf(date_text, sizeof(date_text), "%02d", date);
+  text_layer_set_text(s_data.dateTextLayer,  date_text);
+  int day = t->tm_wday;
+  text_layer_set_text(s_data.dayTextLayer, DAYS[day]);
+  int month = t->tm_mon;
+  text_layer_set_text(s_data.monthTextLayer, MONTHS[month]);
 }
 
 static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
@@ -79,12 +110,16 @@ static void handle_bluetooth(bool connected) {
 static void timer_callback(){
   layer_set_hidden((Layer *)s_data.dateLayer, true);
   layer_set_hidden((Layer *)s_data.dateTextLayer, true);
+  layer_set_hidden((Layer *)s_data.dayTextLayer, true);
+  layer_set_hidden((Layer *)s_data.monthTextLayer, true);
 }
 
 static void handle_tap(AccelAxisType axis, int32_t direction){
   app_timer_register(DATE_DISP_MS, timer_callback, NULL);
   layer_set_hidden((Layer *)s_data.dateLayer, false);
   layer_set_hidden((Layer *)s_data.dateTextLayer, false);
+  layer_set_hidden((Layer *)s_data.dayTextLayer, false);
+  layer_set_hidden((Layer *)s_data.monthTextLayer, false);
 }
 
 static void do_init(void) {
@@ -126,6 +161,19 @@ static void do_init(void) {
   text_layer_set_text_color(s_data.dateTextLayer, PBL_IF_COLOR_ELSE(GColorIcterine, GColorWhite));
   text_layer_set_font(s_data.dateTextLayer, XL);
   text_layer_set_text_alignment(s_data.dateTextLayer, GTextAlignmentCenter);
+  
+  s_data.dayTextLayer = text_layer_create(GRect(0, frame.size.h / 6, frame.size.w, frame.size.h / 6 ));
+  text_layer_set_text_color(s_data.dayTextLayer, PBL_IF_COLOR_ELSE(GColorIcterine, GColorWhite));
+  text_layer_set_background_color(s_data.dayTextLayer, GColorClear);
+  text_layer_set_font(s_data.dayTextLayer, medium);
+  text_layer_set_text_alignment(s_data.dayTextLayer, GTextAlignmentCenter);
+  
+  
+  s_data.monthTextLayer = text_layer_create(GRect(0, 2 * frame.size.h / 3, frame.size.w, frame.size.h / 6 ));
+  text_layer_set_text_color(s_data.monthTextLayer, PBL_IF_COLOR_ELSE(GColorIcterine, GColorWhite));
+  text_layer_set_background_color(s_data.monthTextLayer, GColorClear);
+  text_layer_set_font(s_data.monthTextLayer, medium);
+  text_layer_set_text_alignment(s_data.monthTextLayer, GTextAlignmentCenter);
 
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
@@ -137,8 +185,12 @@ static void do_init(void) {
   layer_add_child(root_layer, text_layer_get_layer(s_data.battery));
   layer_add_child(root_layer, text_layer_get_layer(s_data.dateLayer));
   layer_add_child(root_layer, text_layer_get_layer(s_data.dateTextLayer));
+  layer_add_child(root_layer, text_layer_get_layer(s_data.dayTextLayer));
+  layer_add_child(root_layer, text_layer_get_layer(s_data.monthTextLayer));
   layer_set_hidden((Layer *)s_data.dateLayer, true);
   layer_set_hidden((Layer *)s_data.dateTextLayer, true);
+  layer_set_hidden((Layer *)s_data.dayTextLayer, true);
+  layer_set_hidden((Layer *)s_data.monthTextLayer, true);
 
   tick_timer_service_subscribe(MINUTE_UNIT, &handle_minute_tick);
   battery_state_service_subscribe(&handle_battery);

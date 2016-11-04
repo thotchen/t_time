@@ -18,13 +18,7 @@
                 },
                 {
                     "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_48",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_38",
+                    "name": "QUIRKY_MESSY_16",
                     "targetPlatforms": null,
                     "type": "font"
                 },
@@ -36,7 +30,13 @@
                 },
                 {
                     "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_16",
+                    "name": "QUIRKY_MESSY_38",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_48",
                     "targetPlatforms": null,
                     "type": "font"
                 }
@@ -52,5 +52,5 @@
             "watchface": true
         }
     },
-    "version": "1.2.0"
+    "version": "1.3.0"
 }
