@@ -24,6 +24,8 @@ typedef struct ClaySettings {
   int date_peek;
   GColor bg_color;
   GColor fg_color;
+  GColor dt_bg_color;
+  GColor dt_fg_color;
   GColor bg_invert;
   GColor fg_invert;
   GColor fg_alert;

@@ -21,6 +21,8 @@ static void init_default_settings(){
   settings.date_peek = 1500;
   settings.bg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0x000055), GColorBlack);
   settings.fg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFFFF55), GColorWhite);
+  settings.dt_bg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0x000055), GColorBlack);
+  settings.dt_fg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFFFF55), GColorWhite);
   settings.bg_invert = PBL_IF_COLOR_ELSE(GColorFromHEX(0x55FFFF), GColorWhite);
   settings.fg_invert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xAA00AA), GColorBlack);
   settings.fg_alert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFF0000), GColorBlack);
@@ -50,6 +52,14 @@ static void handle_settings(DictionaryIterator *iter, void *context) {
     Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_fg_color);
     if(fg_color_t) {
       settings.fg_color = GColorFromHEX(fg_color_t->value->int32);
+    }
+    Tuple *dt_bg_color_t = dict_find(iter, MESSAGE_KEY_dt_bg_color);
+    if(dt_bg_color_t) {
+      settings.dt_bg_color = GColorFromHEX(dt_bg_color_t->value->int32);
+    }
+    Tuple *dt_fg_color_t = dict_find(iter, MESSAGE_KEY_dt_fg_color);
+    if(fg_color_t) {
+      settings.dt_fg_color = GColorFromHEX(dt_fg_color_t->value->int32);
     }
     Tuple *bg_invert_t = dict_find(iter, MESSAGE_KEY_bg_invert);
     if(bg_invert_t) {
@@ -240,11 +250,11 @@ static void set_colors(){
   //blu tooth alert
   text_layer_set_text_color(s_data.connection, settings.fg_alert);
   //date overlay background
-  text_layer_set_background_color(s_data.dateLayer, settings.bg_color);
+  text_layer_set_background_color(s_data.dateLayer, settings.dt_bg_color);
   //date font
-  text_layer_set_text_color(s_data.dateTextLayer, settings.fg_color);
-  text_layer_set_text_color(s_data.dayTextLayer, settings.fg_color);
-  text_layer_set_text_color(s_data.monthTextLayer, settings.fg_color);  
+  text_layer_set_text_color(s_data.dateTextLayer, settings.dt_fg_color);
+  text_layer_set_text_color(s_data.dayTextLayer, settings.dt_fg_color);
+  text_layer_set_text_color(s_data.monthTextLayer, settings.dt_fg_color);  
 }
 
 static void load_settings(void){

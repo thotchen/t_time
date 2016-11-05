@@ -5,86 +5,130 @@ module.exports = [
   },
   {
     "type": "text",
-    "defaultValue": "Configure T Time just the way you like it."
+    "defaultValue": "configure your T Time the way you want it ..."
   },
   {
     "type": "section",
     "items": [
       {
         "type": "heading",
-        "defaultValue": "Date settings"
-      },
-      {
-        "type": "slider",
-        "messageKey": "datePeek",
-        "defaultValue": 1.5,
-        "label": "Date peek",
-        "description": "Show the date for how long?",
-        "min": 0,
-        "max": 5,
-        "step": 0.5
-      },
-    ]
-  },
-  {
-    "type": "section",
-    "items": [
-      {
-        "type": "heading",
-        "defaultValue": "Color settings"
+        "defaultValue": "watch color settings"
       },
       {
         "type": "color",
         "messageKey": "bg_color",
         "defaultValue": "0x000055",
-        "label": "Normal Background Color"
+        "label": "background color",
+        "description": "everyday background"
       },
       {
         "type": "color",
         "messageKey": "fg_color",
         "defaultValue": "0xFFFF55",
-        "label": "Normal Foreground  Color"
+        "label": "font color",
+        "description": "everyday text"
+      }
+      ]
+  },
+   {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "date settings"
+      },
+      {
+        "type": "slider",
+        "messageKey": "datePeek",
+        "defaultValue": 1.5,
+        "label": "date peek (seconds)",
+        "description": "how long do you want to show the date for?",
+        "min": 0,
+        "max": 5,
+        "step": 0.5
+      },
+      {
+        "type": "color",
+        "messageKey": "dt_bg_color",
+        "defaultValue": "0x000055",
+        "label": "background color",
+        "description": "date background"
+      },
+      {
+        "type": "color",
+        "messageKey": "dt_fg_color",
+        "defaultValue": "0xFFFF55",
+        "label": "font color",
+        "description": "date text"
+      }
+    ]
+  },
+  {
+  "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "bluetooth down"
+      },
+      {
+        "type": "text",
+        "defaultValue": "where's my phone?"
       },
       {
         "type": "color",
         "messageKey": "bg_invert",
         "defaultValue": "0x55FFFF",
-        "label": "Inverted Background Color"
+        "label": "background color",
+        "description": "bluetooth lost background"
       },
       {
         "type": "color",
         "messageKey": "fg_invert",
         "defaultValue": "0xAA00AA",
-        "label": "Inverted Foreground  Color"
+        "label": "font color",
+        "description": "bluetooth lost font"
       },
       {
         "type": "color",
         "messageKey": "fg_alert",
         "defaultValue": "0xFF0000",
-        "label": "Inverted Alert Color"
+        "label": "bluetooth alert color",
+        "description": "bluetooth warning text"
+      }
+      ]
+  },
+  {
+   "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "charging indicator"
       },
       {
         "type": "color",
         "messageKey": "fg_chg_low",
         "defaultValue": "0xFF0000",
-        "label": "Low Charge Color"
+        "label": "low charge color",
+        "description": "under 35%"
       },
       {
         "type": "color",
         "messageKey": "fg_chg_med",
         "defaultValue": "0xFFFF55",
-        "label": "Mid Charge  Color"
+        "label": "mid charge color",
+        "description": "under 75%"
       },
       {
         "type": "color",
         "messageKey": "fg_chg_full",
         "defaultValue": "0x00FF00",
-        "label": "High Charge Color"
+        "label": "high charge color",
+        "description": "nearly full"
       }
     ]
   },
   {
     "type": "submit",
-    "defaultValue": "Save Settings"
+    "defaultValue": "save settings"
   }
 ];

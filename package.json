@@ -20,7 +20,9 @@
             "fg_alert",
             "fg_chg_low",
             "fg_chg_med",
-            "fg_chg_full"
+            "fg_chg_full",
+            "dt_bg_color",
+            "dt_fg_color"
         ],
         "projectType": "native",
         "resources": {
@@ -73,5 +75,5 @@
             "watchface": true
         }
     },
-    "version": "1.6.0"
+    "version": "1.7.0"
 }
