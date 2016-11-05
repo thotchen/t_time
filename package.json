@@ -1,12 +1,29 @@
 {
     "author": "Tony Hotchen",
-    "dependencies": {},
+    "dependencies": {
+        "pebble-clay": "^1.0.3"
+    },
     "keywords": [],
     "name": "t-time-color",
     "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
         "displayName": "T Time Color",
         "enableMultiJS": true,
-        "messageKeys": [],
+        "messageKeys": [
+            "datePeek",
+            "bg_color",
+            "fg_color",
+            "bg_invert",
+            "fg_invert",
+            "fg_alert",
+            "fg_chg_low",
+            "fg_chg_med",
+            "fg_chg_full",
+            "dt_bg_color",
+            "dt_fg_color"
+        ],
         "projectType": "native",
         "resources": {
             "media": [
@@ -18,19 +35,7 @@
                 },
                 {
                     "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_16",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_20",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_24",
+                    "name": "QUIRKY_MESSY_48",
                     "targetPlatforms": null,
                     "type": "font"
                 },
@@ -42,7 +47,19 @@
                 },
                 {
                     "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_48",
+                    "name": "QUIRKY_MESSY_24",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_20",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_16",
                     "targetPlatforms": null,
                     "type": "font"
                 }
@@ -58,5 +75,5 @@
             "watchface": true
         }
     },
-    "version": "1.3.0"
+    "version": "1.8.0"
 }
