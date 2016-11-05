@@ -14,7 +14,13 @@
         "messageKeys": [
             "datePeek",
             "bg_color",
-            "fg_color"
+            "fg_color",
+            "bg_invert",
+            "fg_invert",
+            "fg_alert",
+            "fg_chg_low",
+            "fg_chg_med",
+            "fg_chg_full"
         ],
         "projectType": "native",
         "resources": {

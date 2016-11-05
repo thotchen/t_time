@@ -27,7 +27,8 @@ typedef struct ClaySettings {
   GColor bg_invert;
   GColor fg_invert;
   GColor fg_alert;
-  GColor fg_invert_alert;
+  GColor fg_chg_low;
+  GColor fg_chg_med;
   GColor fg_chg_full;
 } __attribute__((__packed__)) ClaySettings;
 

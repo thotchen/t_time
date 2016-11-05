@@ -37,13 +37,49 @@ module.exports = [
         "type": "color",
         "messageKey": "bg_color",
         "defaultValue": "0x000055",
-        "label": "Background Color"
+        "label": "Normal Background Color"
       },
       {
         "type": "color",
         "messageKey": "fg_color",
         "defaultValue": "0xFFFF55",
-        "label": "Foreground  Color"
+        "label": "Normal Foreground  Color"
+      },
+      {
+        "type": "color",
+        "messageKey": "bg_invert",
+        "defaultValue": "0x55FFFF",
+        "label": "Inverted Background Color"
+      },
+      {
+        "type": "color",
+        "messageKey": "fg_invert",
+        "defaultValue": "0xAA00AA",
+        "label": "Inverted Foreground  Color"
+      },
+      {
+        "type": "color",
+        "messageKey": "fg_alert",
+        "defaultValue": "0xFF0000",
+        "label": "Inverted Alert Color"
+      },
+      {
+        "type": "color",
+        "messageKey": "fg_chg_low",
+        "defaultValue": "0xFF0000",
+        "label": "Low Charge Color"
+      },
+      {
+        "type": "color",
+        "messageKey": "fg_chg_med",
+        "defaultValue": "0xFFFF55",
+        "label": "Mid Charge  Color"
+      },
+      {
+        "type": "color",
+        "messageKey": "fg_chg_full",
+        "defaultValue": "0x00FF00",
+        "label": "High Charge Color"
       }
     ]
   },

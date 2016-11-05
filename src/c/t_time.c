@@ -23,8 +23,9 @@ static void init_default_settings(){
   settings.fg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFFFF55), GColorWhite);
   settings.bg_invert = PBL_IF_COLOR_ELSE(GColorFromHEX(0x55FFFF), GColorWhite);
   settings.fg_invert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xAA00AA), GColorBlack);
-  settings.fg_alert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFF0000), GColorWhite);
-  settings.fg_invert_alert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFF0000), GColorBlack);
+  settings.fg_alert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFF0000), GColorBlack);
+  settings.fg_chg_low = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFF0000), GColorWhite);
+  settings.fg_chg_med = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFFFF55), GColorWhite);
   settings.fg_chg_full = PBL_IF_COLOR_ELSE(GColorFromHEX(0x00FF00), GColorWhite);
 }
 
@@ -41,15 +42,40 @@ static void handle_settings(DictionaryIterator *iter, void *context) {
     settings.date_peek = (date_peek_t->value->int32) * 100;
   }
   // Read color preferences
-  Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_bg_color);
-  if(bg_color_t) {
-    settings.bg_color = GColorFromHEX(bg_color_t->value->int32);
-  }
-  Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_fg_color);
-  if(bg_color_t) {
-    settings.fg_color = GColorFromHEX(fg_color_t->value->int32);
-  }
- 
+  #ifdef PBL_COLOR
+    Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_bg_color);
+    if(bg_color_t) {
+      settings.bg_color = GColorFromHEX(bg_color_t->value->int32);
+    }
+    Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_fg_color);
+    if(fg_color_t) {
+      settings.fg_color = GColorFromHEX(fg_color_t->value->int32);
+    }
+    Tuple *bg_invert_t = dict_find(iter, MESSAGE_KEY_bg_invert);
+    if(bg_invert_t) {
+      settings.bg_invert = GColorFromHEX(bg_invert_t->value->int32);
+    }
+    Tuple *fg_invert_t = dict_find(iter, MESSAGE_KEY_fg_invert);
+    if(fg_invert_t) {
+      settings.fg_invert = GColorFromHEX(fg_invert_t->value->int32);
+    }
+    Tuple *fg_alert_t = dict_find(iter, MESSAGE_KEY_fg_alert);
+    if(fg_alert_t) {
+      settings.fg_alert = GColorFromHEX(fg_alert_t->value->int32);
+    }
+    Tuple *fg_chg_low_t = dict_find(iter, MESSAGE_KEY_fg_chg_low);
+    if(fg_chg_low_t) {
+      settings.fg_chg_low = GColorFromHEX(fg_chg_low_t->value->int32);
+    }
+    Tuple *fg_chg_med_t = dict_find(iter, MESSAGE_KEY_fg_chg_med);
+    if(fg_chg_med_t) {
+      settings.fg_chg_med = GColorFromHEX(fg_chg_med_t->value->int32);
+    }
+    Tuple *fg_chg_full_t = dict_find(iter, MESSAGE_KEY_fg_chg_full);
+    if(fg_chg_full_t) {
+      settings.fg_chg_full = GColorFromHEX(fg_chg_full_t->value->int32);
+    }
+  #endif
   prv_save_settings();
 }
 
@@ -59,9 +85,9 @@ static void handle_battery(BatteryChargeState charge_state) {
   if (charge_state.is_charging) {
     snprintf(battery_text, sizeof(battery_text), "+%d%%", charge_state.charge_percent);
     if (charge_state.charge_percent < 35) {
-      text_layer_set_text_color(s_data.battery, settings.fg_alert);
-    } else if (charge_state.charge_percent < 70) {
-      text_layer_set_text_color(s_data.battery, settings.fg_color);
+      text_layer_set_text_color(s_data.battery, settings.fg_chg_low);
+    } else if (charge_state.charge_percent < 75) {
+      text_layer_set_text_color(s_data.battery, settings.fg_chg_med);
     } else {
       text_layer_set_text_color(s_data.battery, settings.fg_chg_full);
     }
@@ -70,7 +96,7 @@ static void handle_battery(BatteryChargeState charge_state) {
     text_layer_set_text_color(s_data.battery, settings.fg_chg_full);
   } else {
     if (charge_state.charge_percent < 35) {
-      text_layer_set_text_color(s_data.battery, settings.fg_alert);
+      text_layer_set_text_color(s_data.battery, settings.fg_chg_low);
       snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
     } else {
       battery_text[0] = '\0';
@@ -190,6 +216,7 @@ static void do_init(void) {
   layer_add_child(root_layer, text_layer_get_layer(s_data.dateTextLayer));
   layer_add_child(root_layer, text_layer_get_layer(s_data.dayTextLayer));
   layer_add_child(root_layer, text_layer_get_layer(s_data.monthTextLayer));
+  //Hide the date
   layer_set_hidden((Layer *)s_data.dateLayer, true);
   layer_set_hidden((Layer *)s_data.dateTextLayer, true);
   layer_set_hidden((Layer *)s_data.dayTextLayer, true);
@@ -211,7 +238,7 @@ static void set_colors(){
   //time font
   text_layer_set_text_color(s_data.time, settings.fg_color);
   //blu tooth alert
-  text_layer_set_text_color(s_data.connection, settings.fg_invert_alert);
+  text_layer_set_text_color(s_data.connection, settings.fg_alert);
   //date overlay background
   text_layer_set_background_color(s_data.dateLayer, settings.bg_color);
   //date font
