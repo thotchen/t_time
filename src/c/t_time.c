@@ -1,43 +1,6 @@
-#include "pebble.h"
+#include <pebble.h>
+#include "t_time.h"
 #include "num2words.h"
-
-#define BUFFER_SIZE 86
-#define SETTINGS_KEY 1
-
-const VibePattern SK_PATTERN = {
-  .durations = (uint32_t []) {100, 200, 100, 200, 100, 200, 300, 200, 100, 200, 300},
-  .num_segments = 11
-};
-
-const VibePattern CT_PATTERN = {
-  .durations = (uint32_t []) {300, 200, 100, 200, 300, 200, 100, 200, 300},
-  .num_segments = 9
-};
-
-static const char* const DAYS[] = {
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday"
-};
-
-static const char* const MONTHS[] = {
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
-};
 
 static struct CommonWordsData {
   TextLayer *time;
@@ -51,17 +14,8 @@ static struct CommonWordsData {
   char buffer[BUFFER_SIZE];
 } s_data;
 
-// Define our settings struct
-static struct ClaySettings {
-  int date_peek;
-  GColor bg_color;
-  GColor fg_color;
-  GColor bg_invert;
-  GColor fg_invert;
-  GColor fg_alert;
-  GColor fg_invert_alert;
-  GColor fg_chg_full;
-} settings;
+// Struct for settings (see t_time.h)
+ClaySettings settings;
 
 static void init_default_settings(){
   settings.date_peek = 1500;
@@ -77,9 +31,10 @@ static void init_default_settings(){
 // Save the settings to persistent storage
 static void prv_save_settings() {
   persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
+  set_colors();
 }
 
-static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) {
+static void handle_settings(DictionaryIterator *iter, void *context) {
   // Read date preferences
   Tuple *date_peek_t = dict_find(iter, MESSAGE_KEY_datePeek);
   if(date_peek_t) {
@@ -88,11 +43,11 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
   // Read color preferences
   Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_bg_color);
   if(bg_color_t) {
-    // settings.bg_color = GColorFromHEX(bg_color_t->value->int32);
+    settings.bg_color = GColorFromHEX(bg_color_t->value->int32);
   }
   Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_fg_color);
   if(bg_color_t) {
-    // settings.fg_color = GColorFromHEX(fg_color_t->value->int32);
+    settings.fg_color = GColorFromHEX(fg_color_t->value->int32);
   }
  
   prv_save_settings();
@@ -180,26 +135,24 @@ static void do_init(void) {
   const bool animated = true;
   window_stack_push(s_data.window, animated);
 
-  window_set_background_color(s_data.window, settings.bg_color);
-
+  //load fonts
   GFont XL = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_48));
   GFont large = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_38));
   GFont datefont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_24));
   GFont medium = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_20));
   GFont small = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_16));
 
+  //load layers
   Layer *root_layer = window_get_root_layer(s_data.window);
   GRect frame = layer_get_frame(root_layer);
 
   s_data.time = text_layer_create(GRect(0, 10, frame.size.w, frame.size.h - 35));
   text_layer_set_background_color(s_data.time, GColorClear);
-  text_layer_set_text_color(s_data.time, settings.fg_color);
   text_layer_set_font(s_data.time, large);
   text_layer_set_text_alignment(s_data.time, GTextAlignmentCenter);
 
   s_data.connection = text_layer_create(GRect(0, frame.size.h -35, frame.size.w, 35));
   text_layer_set_background_color(s_data.connection, GColorClear);
-  text_layer_set_text_color(s_data.connection, settings.fg_invert_alert);
   text_layer_set_font(s_data.connection, small);
   text_layer_set_text_alignment(s_data.connection, GTextAlignmentCenter);
 
@@ -210,21 +163,17 @@ static void do_init(void) {
   
   s_data.dateLayer = text_layer_create(frame);
   s_data.dateTextLayer = text_layer_create(GRect(0, frame.size.h / 3, frame.size.w, frame.size.h / 3));
-  text_layer_set_background_color(s_data.dateLayer, settings.bg_color);
   text_layer_set_background_color(s_data.dateTextLayer, GColorClear);
-  text_layer_set_text_color(s_data.dateTextLayer, settings.fg_color);
   text_layer_set_font(s_data.dateTextLayer, XL);
   text_layer_set_text_alignment(s_data.dateTextLayer, GTextAlignmentCenter);
   
   s_data.dayTextLayer = text_layer_create(GRect(0, frame.size.h / 6, frame.size.w, frame.size.h / 5 ));
-  text_layer_set_text_color(s_data.dayTextLayer, settings.fg_color);
   text_layer_set_background_color(s_data.dayTextLayer, GColorClear);
   text_layer_set_font(s_data.dayTextLayer, datefont);
   text_layer_set_text_alignment(s_data.dayTextLayer, GTextAlignmentCenter);
   
   
   s_data.monthTextLayer = text_layer_create(GRect(0, 2 * frame.size.h / 3, frame.size.w, frame.size.h / 6 ));
-  text_layer_set_text_color(s_data.monthTextLayer, settings.fg_color);
   text_layer_set_background_color(s_data.monthTextLayer, GColorClear);
   text_layer_set_font(s_data.monthTextLayer, datefont);
   text_layer_set_text_alignment(s_data.monthTextLayer, GTextAlignmentCenter);
@@ -251,9 +200,24 @@ static void do_init(void) {
   bluetooth_connection_service_subscribe(&handle_bluetooth);
   accel_tap_service_subscribe(&handle_tap);
   
-  app_message_register_inbox_received(prv_inbox_received_handler);
+  app_message_register_inbox_received(handle_settings);
   app_message_open(128, 128);
 
+}
+
+static void set_colors(){
+  //window background
+  window_set_background_color(s_data.window, settings.bg_color);
+  //time font
+  text_layer_set_text_color(s_data.time, settings.fg_color);
+  //blu tooth alert
+  text_layer_set_text_color(s_data.connection, settings.fg_invert_alert);
+  //date overlay background
+  text_layer_set_background_color(s_data.dateLayer, settings.bg_color);
+  //date font
+  text_layer_set_text_color(s_data.dateTextLayer, settings.fg_color);
+  text_layer_set_text_color(s_data.dayTextLayer, settings.fg_color);
+  text_layer_set_text_color(s_data.monthTextLayer, settings.fg_color);  
 }
 
 static void load_settings(void){
@@ -279,6 +243,7 @@ static void do_deinit(void) {
 int main(void) {
   load_settings();
   do_init();
+  set_colors();
   app_event_loop();
   do_deinit();
 }
