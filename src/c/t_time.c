@@ -2,7 +2,7 @@
 #include "num2words.h"
 
 #define BUFFER_SIZE 86
-#define DATE_DISP_MS 1000
+#define DATE_DISP_MS 1500
 
 const VibePattern SK_PATTERN = {
   .durations = (uint32_t []) {100, 200, 100, 200, 100, 200, 300, 200, 100, 200, 300},
@@ -131,6 +131,7 @@ static void do_init(void) {
 
   GFont XL = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_48));
   GFont large = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_38));
+  GFont datefont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_24));
   GFont medium = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_20));
   GFont small = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_16));
 
@@ -162,17 +163,17 @@ static void do_init(void) {
   text_layer_set_font(s_data.dateTextLayer, XL);
   text_layer_set_text_alignment(s_data.dateTextLayer, GTextAlignmentCenter);
   
-  s_data.dayTextLayer = text_layer_create(GRect(0, frame.size.h / 6, frame.size.w, frame.size.h / 6 ));
+  s_data.dayTextLayer = text_layer_create(GRect(0, frame.size.h / 6, frame.size.w, frame.size.h / 5 ));
   text_layer_set_text_color(s_data.dayTextLayer, PBL_IF_COLOR_ELSE(GColorIcterine, GColorWhite));
   text_layer_set_background_color(s_data.dayTextLayer, GColorClear);
-  text_layer_set_font(s_data.dayTextLayer, medium);
+  text_layer_set_font(s_data.dayTextLayer, datefont);
   text_layer_set_text_alignment(s_data.dayTextLayer, GTextAlignmentCenter);
   
   
   s_data.monthTextLayer = text_layer_create(GRect(0, 2 * frame.size.h / 3, frame.size.w, frame.size.h / 6 ));
   text_layer_set_text_color(s_data.monthTextLayer, PBL_IF_COLOR_ELSE(GColorIcterine, GColorWhite));
   text_layer_set_background_color(s_data.monthTextLayer, GColorClear);
-  text_layer_set_font(s_data.monthTextLayer, medium);
+  text_layer_set_font(s_data.monthTextLayer, datefont);
   text_layer_set_text_alignment(s_data.monthTextLayer, GTextAlignmentCenter);
 
   time_t now = time(NULL);

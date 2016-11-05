@@ -30,6 +30,12 @@
                 },
                 {
                     "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_24",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
                     "name": "QUIRKY_MESSY_38",
                     "targetPlatforms": null,
                     "type": "font"
