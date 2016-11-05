@@ -56,12 +56,22 @@ static struct ClaySettings {
   int date_peek;
   GColor bg_color;
   GColor fg_color;
+  GColor bg_invert;
+  GColor fg_invert;
+  GColor fg_alert;
+  GColor fg_invert_alert;
+  GColor fg_chg_full;
 } settings;
 
 static void init_default_settings(){
   settings.date_peek = 1500;
-  settings.bg_color = GColorFromHEX(0x000055);
-  settings.fg_color = GColorFromHEX(0xFFFF55);
+  settings.bg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0x000055), GColorBlack);
+  settings.fg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFFFF55), GColorWhite);
+  settings.bg_invert = PBL_IF_COLOR_ELSE(GColorFromHEX(0x55FFFF), GColorWhite);
+  settings.fg_invert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xAA00AA), GColorBlack);
+  settings.fg_alert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFF0000), GColorWhite);
+  settings.fg_invert_alert = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFF0000), GColorBlack);
+  settings.fg_chg_full = PBL_IF_COLOR_ELSE(GColorFromHEX(0x00FF00), GColorWhite);
 }
 
 // Save the settings to persistent storage
@@ -76,14 +86,14 @@ static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) 
     settings.date_peek = (date_peek_t->value->int32) * 100;
   }
   // Read color preferences
-//  Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_bg_color);
-//  if(bg_color_t) {
-//    settings.bg_color = GColorFromHEX(bg_color_t->value->int32);
-//  }
-//  Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_fg_color);
-//  if(bg_color_t) {
-//    settings.fg_color = GColorFromHEX(fg_color_t->value->int32);
-//  }
+  Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_bg_color);
+  if(bg_color_t) {
+    // settings.bg_color = GColorFromHEX(bg_color_t->value->int32);
+  }
+  Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_fg_color);
+  if(bg_color_t) {
+    // settings.fg_color = GColorFromHEX(fg_color_t->value->int32);
+  }
  
   prv_save_settings();
 }
@@ -93,13 +103,19 @@ static void handle_battery(BatteryChargeState charge_state) {
 
   if (charge_state.is_charging) {
     snprintf(battery_text, sizeof(battery_text), "+%d%%", charge_state.charge_percent);
-    text_layer_set_text_color(s_data.battery, PBL_IF_COLOR_ELSE(settings.fg_color, GColorWhite));
+    if (charge_state.charge_percent < 35) {
+      text_layer_set_text_color(s_data.battery, settings.fg_alert);
+    } else if (charge_state.charge_percent < 70) {
+      text_layer_set_text_color(s_data.battery, settings.fg_color);
+    } else {
+      text_layer_set_text_color(s_data.battery, settings.fg_chg_full);
+    }
   } else if (charge_state.is_plugged) {
     snprintf(battery_text, sizeof(battery_text), "FULL");
-    text_layer_set_text_color(s_data.battery, PBL_IF_COLOR_ELSE(GColorGreen, GColorWhite));
+    text_layer_set_text_color(s_data.battery, settings.fg_chg_full);
   } else {
     if (charge_state.charge_percent < 35) {
-      text_layer_set_text_color(s_data.battery, PBL_IF_COLOR_ELSE(GColorRed, GColorWhite));
+      text_layer_set_text_color(s_data.battery, settings.fg_alert);
       snprintf(battery_text, sizeof(battery_text), "%d%%", charge_state.charge_percent);
     } else {
       battery_text[0] = '\0';
@@ -135,12 +151,12 @@ static void handle_bluetooth(bool connected) {
  text_layer_set_text(s_data.connection, connected ? "" : "bluetooth disconnected");
  if (connected) {
    vibes_enqueue_custom_pattern(CT_PATTERN);
-   window_set_background_color(s_data.window, PBL_IF_COLOR_ELSE(settings.bg_color, GColorBlack));
-   text_layer_set_text_color(s_data.time, PBL_IF_COLOR_ELSE(settings.fg_color, GColorWhite));
+   window_set_background_color(s_data.window, settings.bg_color);
+   text_layer_set_text_color(s_data.time, settings.fg_color);
   } else {
    vibes_enqueue_custom_pattern(SK_PATTERN);
-   window_set_background_color(s_data.window, PBL_IF_COLOR_ELSE(GColorElectricBlue, GColorWhite));
-   text_layer_set_text_color(s_data.time, PBL_IF_COLOR_ELSE(GColorPurple, GColorBlack));
+   window_set_background_color(s_data.window, settings.bg_invert);
+   text_layer_set_text_color(s_data.time, settings.fg_invert);
   }
 }
 
@@ -164,7 +180,7 @@ static void do_init(void) {
   const bool animated = true;
   window_stack_push(s_data.window, animated);
 
-  window_set_background_color(s_data.window, PBL_IF_COLOR_ELSE(settings.bg_color, GColorBlack));
+  window_set_background_color(s_data.window, settings.bg_color);
 
   GFont XL = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_48));
   GFont large = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_QUIRKY_MESSY_38));
@@ -177,13 +193,13 @@ static void do_init(void) {
 
   s_data.time = text_layer_create(GRect(0, 10, frame.size.w, frame.size.h - 35));
   text_layer_set_background_color(s_data.time, GColorClear);
-  text_layer_set_text_color(s_data.time, PBL_IF_COLOR_ELSE(settings.fg_color, GColorWhite));
+  text_layer_set_text_color(s_data.time, settings.fg_color);
   text_layer_set_font(s_data.time, large);
   text_layer_set_text_alignment(s_data.time, GTextAlignmentCenter);
 
   s_data.connection = text_layer_create(GRect(0, frame.size.h -35, frame.size.w, 35));
   text_layer_set_background_color(s_data.connection, GColorClear);
-  text_layer_set_text_color(s_data.connection, PBL_IF_COLOR_ELSE(GColorRed, GColorBlack));
+  text_layer_set_text_color(s_data.connection, settings.fg_invert_alert);
   text_layer_set_font(s_data.connection, small);
   text_layer_set_text_alignment(s_data.connection, GTextAlignmentCenter);
 
@@ -194,21 +210,21 @@ static void do_init(void) {
   
   s_data.dateLayer = text_layer_create(frame);
   s_data.dateTextLayer = text_layer_create(GRect(0, frame.size.h / 3, frame.size.w, frame.size.h / 3));
-  text_layer_set_background_color(s_data.dateLayer, PBL_IF_COLOR_ELSE(settings.bg_color, GColorBlack));
+  text_layer_set_background_color(s_data.dateLayer, settings.bg_color);
   text_layer_set_background_color(s_data.dateTextLayer, GColorClear);
-  text_layer_set_text_color(s_data.dateTextLayer, PBL_IF_COLOR_ELSE(settings.fg_color, GColorWhite));
+  text_layer_set_text_color(s_data.dateTextLayer, settings.fg_color);
   text_layer_set_font(s_data.dateTextLayer, XL);
   text_layer_set_text_alignment(s_data.dateTextLayer, GTextAlignmentCenter);
   
   s_data.dayTextLayer = text_layer_create(GRect(0, frame.size.h / 6, frame.size.w, frame.size.h / 5 ));
-  text_layer_set_text_color(s_data.dayTextLayer, PBL_IF_COLOR_ELSE(settings.fg_color, GColorWhite));
+  text_layer_set_text_color(s_data.dayTextLayer, settings.fg_color);
   text_layer_set_background_color(s_data.dayTextLayer, GColorClear);
   text_layer_set_font(s_data.dayTextLayer, datefont);
   text_layer_set_text_alignment(s_data.dayTextLayer, GTextAlignmentCenter);
   
   
   s_data.monthTextLayer = text_layer_create(GRect(0, 2 * frame.size.h / 3, frame.size.w, frame.size.h / 6 ));
-  text_layer_set_text_color(s_data.monthTextLayer, PBL_IF_COLOR_ELSE(settings.fg_color, GColorWhite));
+  text_layer_set_text_color(s_data.monthTextLayer, settings.fg_color);
   text_layer_set_background_color(s_data.monthTextLayer, GColorClear);
   text_layer_set_font(s_data.monthTextLayer, datefont);
   text_layer_set_text_alignment(s_data.monthTextLayer, GTextAlignmentCenter);
