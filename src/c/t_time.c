@@ -19,6 +19,7 @@ ClaySettings settings;
 
 static void init_default_settings(){
   settings.date_peek = 1500;
+  settings.delay_peek = 0;
   settings.bg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0x000055), GColorBlack);
   settings.fg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0xFFFF55), GColorWhite);
   settings.dt_bg_color = PBL_IF_COLOR_ELSE(GColorFromHEX(0x000055), GColorBlack);
@@ -41,7 +42,11 @@ static void handle_settings(DictionaryIterator *iter, void *context) {
   // Read date preferences
   Tuple *date_peek_t = dict_find(iter, MESSAGE_KEY_datePeek);
   if(date_peek_t) {
-    settings.date_peek = (date_peek_t->value->int32) * 100;
+    settings.date_peek = (date_peek_t->value->int32) * 10;
+  }
+  Tuple *delay_peek_t = dict_find(iter, MESSAGE_KEY_delayPeek);
+  if(date_peek_t) {
+    settings.delay_peek = (delay_peek_t->value->int32) * 10;
   }
   // Read color preferences
   #ifdef PBL_COLOR
@@ -158,12 +163,16 @@ static void timer_callback(){
   layer_set_hidden((Layer *)s_data.monthTextLayer, true);
 }
 
-static void handle_tap(AccelAxisType axis, int32_t direction){
+static void delay_callback(){
   app_timer_register(settings.date_peek, timer_callback, NULL);
   layer_set_hidden((Layer *)s_data.dateLayer, false);
   layer_set_hidden((Layer *)s_data.dateTextLayer, false);
   layer_set_hidden((Layer *)s_data.dayTextLayer, false);
   layer_set_hidden((Layer *)s_data.monthTextLayer, false);
+}
+
+static void handle_tap(AccelAxisType axis, int32_t direction){
+  app_timer_register(settings.delay_peek, delay_callback, NULL); 
 }
 
 static void do_init(void) {

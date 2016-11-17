@@ -45,7 +45,17 @@ module.exports = [
         "description": "how long do you want to show the date for?",
         "min": 0,
         "max": 5,
-        "step": 0.5
+        "step": 0.25
+      },
+      {
+        "type": "slider",
+        "messageKey": "delayPeek",
+        "defaultValue": 0.001,
+        "label": "delay peek (seconds)",
+        "description": "how long do you want to wait before the date shows?",
+        "min": 0,
+        "max": 5,
+        "step": 0.25
       },
       {
         "type": "color",

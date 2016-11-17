@@ -22,7 +22,8 @@
             "fg_chg_med",
             "fg_chg_full",
             "dt_bg_color",
-            "dt_fg_color"
+            "dt_fg_color",
+            "delayPeek"
         ],
         "projectType": "native",
         "resources": {
@@ -35,19 +36,7 @@
                 },
                 {
                     "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_48",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_38",
-                    "targetPlatforms": null,
-                    "type": "font"
-                },
-                {
-                    "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_24",
+                    "name": "QUIRKY_MESSY_16",
                     "targetPlatforms": null,
                     "type": "font"
                 },
@@ -59,7 +48,19 @@
                 },
                 {
                     "file": "fonts/Quirky_Messy.ttf",
-                    "name": "QUIRKY_MESSY_16",
+                    "name": "QUIRKY_MESSY_24",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_38",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/Quirky_Messy.ttf",
+                    "name": "QUIRKY_MESSY_48",
                     "targetPlatforms": null,
                     "type": "font"
                 }
@@ -75,5 +76,5 @@
             "watchface": true
         }
     },
-    "version": "1.8.0"
+    "version": "1.10.0"
 }

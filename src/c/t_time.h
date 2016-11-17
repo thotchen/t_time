@@ -22,6 +22,7 @@ static const char* const MONTHS[] = {"January", "February", "March", "April", "M
 // Structure for settings
 typedef struct ClaySettings {
   int date_peek;
+  int delay_peek;
   GColor bg_color;
   GColor fg_color;
   GColor dt_bg_color;
@@ -43,6 +44,7 @@ static void update_date(struct tm* t);
 static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed);
 static void handle_bluetooth(bool connected);
 static void timer_callback();
+static void delay_callback();
 static void handle_tap(AccelAxisType axis, int32_t direction);
 static void do_init(void);
 static void set_colors();
